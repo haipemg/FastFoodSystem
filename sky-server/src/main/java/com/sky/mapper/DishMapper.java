@@ -41,6 +41,7 @@ public interface DishMapper {
     @Select("select dish.*,category.name as categoryName from dish,category where dish.category_id=category.id and dish.id=#{id}")
     public DishVO getByIdWithFlavor(Long id);
 
+    List<Dish> list(Dish dish);
 
     public void update(DishDTO dishDTO);
 
