@@ -1,9 +1,11 @@
 package com.sky.mapper;
 
+import com.sky.dto.SetmealDTO;
+import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.vo.DishItemVO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import com.sky.vo.SetmealVO;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -35,5 +37,27 @@ public interface SetmealMapper {
             "where sd.setmeal_id = #{setmealId}")
     List<DishItemVO> getDishItemBySetmealId(Long setmealId);
 
+    //分页查询套餐
+    public List<SetmealVO> pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 
+    //插入套餐
+    @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
+    @Insert("insert into setmeal(category_id, name, price, status, description, image) " +
+            "values(#{categoryId},#{name},#{price},#{status},#{description},#{image})")
+    public void insert(SetmealDTO setmealDTO);
+
+    //显示回显
+    public SetmealVO getById(Long id);
+
+    //更新套餐数据
+    @Update("update setmeal set category_id=#{categoryId},name=#{name},price=#{price}" +
+            ",image=#{image},description=#{description} where id=#{id}")
+    public void update(SetmealDTO setmealDTO);
+
+    //修改销售状态
+    @Update("update setmeal set status=#{status} where id=#{id}")
+    public void updateStatus(Integer status, Long id);
+
+    //批量删除
+    public void delete(List<Long> ids);
 }

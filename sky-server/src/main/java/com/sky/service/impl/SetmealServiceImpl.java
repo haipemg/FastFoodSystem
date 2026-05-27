@@ -57,4 +57,57 @@ public class SetmealServiceImpl implements SetmealService {
     public List<DishItemVO> getDishItemById(Long id) {
         return setmealMapper.getDishItemBySetmealId(id);
     }
+
+    @Override
+    public PageResult pageQuery(SetmealPageQueryDTO setmealPageQueryDTO) {
+      PageHelper.startPage(setmealPageQueryDTO.getPage(),setmealPageQueryDTO.getPageSize());
+      List<SetmealVO> list = setmealMapper.pageQuery(setmealPageQueryDTO);
+      Page<SetmealVO> page = (Page<SetmealVO>) list;
+      return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void insert(SetmealDTO setmealDTO) {
+     setmealMapper.insert(setmealDTO);
+        List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+        setmealDishes.forEach(e->{
+            e.setSetmealId(setmealDTO.getId());
+            log.info("oioioioioioio{}",e);
+        });
+        setmealDishMapper.insertBatch(setmealDishes);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public SetmealVO getById(Long id) {
+        SetmealVO byId = setmealMapper.getById(id);
+        List<SetmealDish> byId1 = setmealDishMapper.getById(id);
+        byId.setSetmealDishes(byId1);
+        return byId;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void update(SetmealDTO setmealDTO) {
+         setmealMapper.update(setmealDTO);
+          setmealDishMapper.deleteBySetmealId(setmealDTO.getId());
+          List<SetmealDish> setmealDishes = setmealDTO.getSetmealDishes();
+          setmealDishes.forEach(e->{
+              e.setSetmealId(setmealDTO.getId());
+          });
+          setmealDishMapper.insert(setmealDishes);
+    }
+
+    @Override
+    public void updateStatus(Integer status, Long id) {
+        setmealMapper.updateStatus(status,id);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void delete(List<Long> ids) {
+         setmealMapper.delete(ids);
+         setmealDishMapper.deleteBySetmealIds(ids);
+    }
 }

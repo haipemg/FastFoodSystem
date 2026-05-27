@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.SetmealMapper">
+    <delete id="delete">
+        delete from setmeal where id in
+            <foreach collection="ids" item="e" separator="," close=")" open="(">
+                            #{e}
+            </foreach>
+    </delete>
 
     <select id="list" parameterType="Setmeal" resultType="Setmeal">
         select * from setmeal
@@ -16,5 +22,23 @@
                 and status = #{status}
             </if>
         </where>
+    </select>
+    <select id="pageQuery" resultType="com.sky.vo.SetmealVO">
+        select * from setmeal
+        <where>
+            <if test="categoryId != null">
+                and category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="name != null">
+                and name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="getById" resultType="com.sky.vo.SetmealVO">
+       select setmeal.* from setmeal where id = #{id}
     </select>
 </mapper>

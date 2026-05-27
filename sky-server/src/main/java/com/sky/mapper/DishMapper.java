@@ -45,5 +45,9 @@ public interface DishMapper {
 
     public void update(DishDTO dishDTO);
 
+    //根据菜品分类id查询菜品
+    @Select("select * from dish where category_id=#{categoryId}")
+    public List<DishVO> listByCategoryId(Long categoryId);
+
 
 }
