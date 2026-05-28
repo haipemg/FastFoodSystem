@@ -9,6 +9,9 @@ import com.sky.vo.SetmealVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +30,7 @@ public class SetMealController {
         return Result.success(pageResult);
     }
 
+    @CacheEvict(cacheNames = "setmeal",allEntries = true)
     @ApiOperation("插入套餐数据")
     @PostMapping
     public Result insert(@RequestBody SetmealDTO setmealDTO) {
@@ -42,12 +46,15 @@ public class SetMealController {
         return Result.success(setmealVO);
     }
 
+    @CacheEvict(cacheNames = "setmeal",allEntries = true)
     @ApiOperation("更新套餐数据")
     @PutMapping
     public Result update(@RequestBody SetmealDTO setmealDTO) {
         setMealService.update(setmealDTO);
         return Result.success();
     }
+
+    @CacheEvict(cacheNames = "setmeal",allEntries = true)
 
     @ApiOperation("修改套餐销售状态")
     @PostMapping("/status/{status}")
@@ -56,6 +63,7 @@ public class SetMealController {
         return Result.success();
     }
 
+    @CacheEvict(cacheNames = "setmeal",allEntries = true)
     @ApiOperation("批量删除套餐")
     @DeleteMapping
     public Result delete(@RequestParam List<Long> ids) {

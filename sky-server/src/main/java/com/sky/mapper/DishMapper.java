@@ -6,6 +6,7 @@ import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import com.sky.vo.DishVO;
+import com.sky.vo.SetmealVO;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -29,6 +30,7 @@ public interface DishMapper {
             "#{createTime},#{updateTime},#{createUser},#{updateUser})")
     public void insert(Dish dish);
 
+    //分页查询（包括口味）
     public List<DishVO> selectByPage(DishPageQueryDTO dishPageQueryDTO);
 
 
