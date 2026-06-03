@@ -5,6 +5,10 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.core.annotation.Order;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface OrderMapper {
@@ -31,5 +35,11 @@ public interface OrderMapper {
      */
     void update(Orders orders);
 
+    //查询订单超时的订单
+    @Select("select * from orders where status=#{status} and order_time<#{orderTime}")
+    List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime orderTime);
 
+    //查询正在派送中的订单
+    @Select("select * from orders where status=#{status}")
+    List<Orders> getOrdersByStatus(Integer status);
 }
